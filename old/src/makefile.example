@@ -1,0 +1,59 @@
+### STK effects Makefile - for various flavors of unix
+
+PROGRAMS = effects
+RM = /bin/rm
+SRC_PATH = ../../src
+OBJECT_PATH = Release
+vpath %.o $(OBJECT_PATH)
+
+OBJECTS	=	Stk.o Generator.o Envelope.o SineWave.o \
+					Filter.o Delay.o DelayL.o \
+					Effect.o Echo.o PitShift.o Chorus.o \
+					PRCRev.o JCRev.o NRev.o \
+					FileRead.o WvIn.o FileWvIn.o WaveLoop.o Skini.o Messager.o
+
+INCLUDE = $(HOME)/research/programming/stk-4.2.1/include/
+ifeq ($(strip $(INCLUDE)), )
+	INCLUDE = ../../include
+endif
+vpath %.h $(INCLUDE)
+
+CC       = g++
+DEFS     = 
+DEFS    += 
+CFLAGS   = -O3
+CFLAGS  += -Wall -g -D__GXX__ -I$(INCLUDE)
+LIBRARY = -lpthread -lm 
+LIBRARY += -framework CoreAudio -framework CoreMIDI -framework CoreFoundation
+
+REALTIME = yes
+ifeq ($(REALTIME),yes)
+	OBJECTS += RtMidi.o RtAudio.o Thread.o Mutex.o Socket.o TcpServer.o
+	DEFS    += -D__MACOSX_CORE__
+endif
+
+RAWWAVES = $(HOME)/research/programming/stk-4.2.1/rawwaves/
+ifeq ($(strip $(RAWWAVES)), )
+	RAWWAVES = ../../rawwaves/
+endif
+DEFS    += -DRAWWAVE_PATH=\"$(RAWWAVES)\"
+
+%.o : $(SRC_PATH)/%.cpp
+	$(CC) $(CFLAGS) $(DEFS) -c $(<) -o $(OBJECT_PATH)/$@
+
+all : $(PROGRAMS)
+
+effects: effects.cpp $(OBJECTS)
+	$(CC) $(CFLAGS) $(DEFS) -o effects effects.cpp $(OBJECT_PATH)/*.o $(LIBRARY)
+
+libeffects: effects.cpp
+	$(CC) $(CFLAGS) $(DEFS) -o effects effects.cpp -L../../src $(LIBRARY) -lstk
+
+$(OBJECTS) : Stk.h
+
+clean : 
+	-rm $(OBJECT_PATH)/*.o
+	-rm $(PROGRAMS)
+
+strip : 
+	strip $(PROGRAMS)

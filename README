@@ -1,0 +1,4 @@
+
+
+In the Stk.cpp, handleErrors has been modified to output to std::cout from std:cerr to prevent the subsystem from crashing.
+If you replace Stk with a new version, you must manually patch this again, its not hard.
