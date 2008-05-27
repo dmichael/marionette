@@ -1,4 +1,28 @@
+= Marionette -- Realtime audio extensions for Ruby
 
+Marionette[http://marionette.rubyforge.org/] is a set of objects for the Ruby programming language providing facilities for realtime audio synthesis and playback. Marionette is build around Perry R. Cook & Gary P. Scavone's {Synthesis ToolKit in C++ (STK)}[link:http://ccrma.stanford.edu/software/stk/] .
 
-In the Stk.cpp, handleErrors has been modified to output to std::cout from std:cerr to prevent the subsystem from crashing.
-If you replace Stk with a new version, you must manually patch this again, its not hard.
+== Installation
+
+The library is packaged right now as a gem, using the gemspec. When the library is more complete, it will be available through RubyForge. In the meantime, try this:
+
+	$ gem build marionette.gemspec
+	$ gem install marionette-0.0.1
+	
+Beware: there are bugs. Lots of them. And things may not work as expected.
+
+== Basic Usage
+
+In addition to the following example, please have a look at the tests for usage. The tests are not guaranteed to work currently, but that will be fixed shortly.
+
+	require 'rubygems'
+  require 'marionette'
+
+	Audio.initialize :device => 2, :samplerate => 44100
+  Audio.run
+
+	sine = Sine.new :freq => 440
+  sine.play
+  sleep 10
+	sine.stop
+	
