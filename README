@@ -17,10 +17,13 @@ In addition to the following example, please have a look at the tests for usage.
 
 	require 'rubygems'
   require 'marionette'
-
-	Audio.initialize :device => 2, :samplerate => 44100
-  Audio.run
-
+	
+	# Initialize the audio subsystem and start evaluating DSP graphs (in one step)
+	Marionette.start :device => 2, :samplerate => 44100
+	
+	# Writes audio device details to stdout
+	Marionette.probe 
+	
 	sine = Sine.new :freq => 440
   sine.play
   sleep 10
