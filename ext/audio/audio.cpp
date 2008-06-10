@@ -210,6 +210,39 @@ static VALUE Audio_info(VALUE self)
 	return Qnil;
 }
 
+
+static VALUE Audio_set_gain(VALUE self, VALUE gain) 
+{
+  if(_marionette) {
+    if(TYPE(gain) == T_FLOAT || TYPE(gain) == T_FIXNUM){
+      float gain_f = (float) NUM2DBL(gain);
+      // set the frequency
+      _marionette->setGain(gain_f);
+      return Qtrue;
+    }
+    else{
+      return Qfalse;
+    }
+  } 
+  else {
+    printf("Audio is not intialized.\n");
+    return Qfalse;
+  }
+}
+
+static VALUE Audio_get_gain(VALUE self) 
+{
+  if(_marionette) {
+    float gain = _marionette->getGain();
+    return rb_float_new(gain);
+    
+  } 
+  else {
+    printf("Audio is not intialized.\n");
+    return Qfalse;
+  }
+}
+
 // AUDIO OUT ADD UGEN
 static VALUE Audio_Out_add(VALUE self, VALUE ugen) 
 {
@@ -272,7 +305,10 @@ extern "C" void Init_audio()
   rb_define_module_function(AudioModule, "release", (VALUE(*)(...)) Audio_release, 0);
   rb_define_module_function(AudioModule, "run", (VALUE(*)(...)) Audio_run, 0);
   rb_define_module_function(AudioModule, "stop", (VALUE(*)(...)) Audio_stop, 0);
-  rb_define_module_function(AudioModule, "info", (VALUE(*)(...)) Audio_info, 0);  
+  rb_define_module_function(AudioModule, "info", (VALUE(*)(...)) Audio_info, 0);
+  
+  rb_define_module_function(AudioModule, "gain=", (VALUE(*)(...)) Audio_set_gain, 1);  
+  rb_define_module_function(AudioModule, "gain", (VALUE(*)(...)) Audio_get_gain, 0);  
 
   // Audio Outputs
   AudioOut    = rb_define_class_under(AudioModule, "Out", rb_cObject);

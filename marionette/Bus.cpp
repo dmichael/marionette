@@ -15,6 +15,7 @@ Bus::Bus(int num_channels)
   for(int i=0; i<num_channels; i++){
     gains[i] = 1;
   }
+  master_gain = 1;
   number_of_speakers = num_channels;
 }
 
@@ -143,6 +144,15 @@ void Bus::clearInputs()
 	writers.clear();
 }
 
+float Bus::masterGain()
+{
+  return master_gain;
+}
+
+void Bus::setMasterGain(float g)
+{
+  master_gain = g;
+}
 
 StkFloat Bus::computeSample()
 {  
@@ -178,7 +188,7 @@ void Bus::computeFrame( void )
       for ( int j = 0; j < number_of_speakers; j++ ) 
       {
         //lastOutputs_[j] += (lastOutput_ * gains[j] );
-        lastOutputs_[j] += (lastOutput_ * writers[i].gains[j] );
+        lastOutputs_[j] += (lastOutput_ * writers[i].gains[j] ) * masterGain();
       }
     }
     // If the writer is multichannel and has the same number of channels as the outputbuffer 
@@ -188,7 +198,7 @@ void Bus::computeFrame( void )
       //this->calculateGains((*i)->gain(), (*i)->pan(), counter); 
       // now add them all up!
       for ( int j=0; j<number_of_speakers; j++ ) {
-        lastOutputs_[j] += (lastOutputs_temp_[j] * writers[i].gains[j] );
+        lastOutputs_[j] += (lastOutputs_temp_[j] * writers[i].gains[j] ) * masterGain();
         //lastOutputs_[j] += (lastOutputs_temp_[j] * gains[j] );
       }  
     }

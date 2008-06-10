@@ -133,6 +133,20 @@ void Marionette::removeUnit(Unit *ugen)
   }
 }
 
+/******************************
+Marionette::setGain
+******************************/
+
+float Marionette::setGain(float gain)
+{
+  out->setMasterGain(gain);
+  return out->masterGain();
+}
+
+float Marionette::getGain()
+{
+  return out->masterGain();
+}
 
 /*******************
 Marionette::Run

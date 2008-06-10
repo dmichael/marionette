@@ -49,7 +49,10 @@ public:
   
   void addUnit(Unit*);
 	void removeUnit(Unit*);
-  
+	
+  float setGain(float); // [0.0 - 1.0]
+  float getGain(); // [0.0 - 1.0]
+    
   void Run();
   void Stop();
   void info( void );

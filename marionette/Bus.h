@@ -40,6 +40,9 @@ public:
   
   void clearInputs();
 
+  float masterGain();
+  
+  void setMasterGain(float);
 
 	std::list<FX*> inserts;
 
@@ -66,7 +69,7 @@ protected:
   int number_of_speakers;
   StkFrames pans; // buffer to hold pan changes
   StkFrames gains;
-  
+  float master_gain;
   StkFloat computeSample( void );
   void computeFrame( void );
 };

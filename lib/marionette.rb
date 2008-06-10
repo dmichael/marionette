@@ -22,6 +22,6 @@ module Marionette
   
   def self.probe
     Audio.info
-  end
-    
+  end    
+
 end
